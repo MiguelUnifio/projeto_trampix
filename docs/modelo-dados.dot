@@ -1,0 +1,23 @@
+digraph Trampix {
+  graph [rankdir=LR, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="0.8", label="TRAMPIX — Modelo entidade-relacionamento (visão lógica)", labelloc=t, fontsize=20, fontname="Arial"];
+  node [shape=record, style="rounded,filled", fillcolor="#eef5ff", color="#3976b9", fontname="Arial", fontsize=10];
+  edge [color="#64748b", fontname="Arial", fontsize=9, arrowsize=0.8];
+  Usuario [label="{USUARIO|PK id\l nome\l email\l perfil\l status\l}"];
+  PrestadorPerfil [label="{PRESTADOR_PERFIL|PK id\l FK usuario_id\l biografia\l raio_atendimento_km\l verificado\l}"];
+  Categoria [label="{CATEGORIA|PK id\l nome\l descricao\l ativa\l}"];
+  Subcategoria [label="{SUBCATEGORIA|PK id\l FK categoria_id\l nome\l status\l}"];
+  Servico [label="{SERVICO|PK id\l FK prestador_id\l FK categoria_id\l FK subcategoria_id\l titulo\l preco\l status\l}"];
+  Disponibilidade [label="{DISPONIBILIDADE|PK id\l FK prestador_id\l dia_semana\l hora_inicio\l hora_fim\l}"];
+  Contratacao [label="{CONTRATACAO|PK id\l FK servico_id\l FK cliente_id\l data_inicio\l data_fim\l status\l preco_combinado\l}"];
+  ContratacaoHistorico [label="{CONTRATACAO_HISTORICO|PK id\l FK contratacao_id\l FK autor_id\l status_anterior\l status_novo\l criado_em\l}"];
+  Usuario -> PrestadorPerfil [label="1 : 0..1"];
+  PrestadorPerfil -> Servico [label="1 : N"];
+  Categoria -> Subcategoria [label="1 : N"];
+  Categoria -> Servico [label="1 : N"];
+  Subcategoria -> Servico [label="1 : N"];
+  PrestadorPerfil -> Disponibilidade [label="1 : N"];
+  Servico -> Contratacao [label="1 : N"];
+  Usuario -> Contratacao [label="cliente 1 : N"];
+  Contratacao -> ContratacaoHistorico [label="1 : N"];
+  Usuario -> ContratacaoHistorico [label="autor 1 : N"];
+}

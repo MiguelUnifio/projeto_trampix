@@ -1,0 +1,1821 @@
+{
+  "info": {
+    "_postman_id": "b1d81db7-7c5d-4d4c-92ad-3aef1b3cbbf1",
+    "name": "Trampix - Projeto Integrador",
+    "description": "Coleção de demonstração dos requisitos REST, CRUD, validação, regras de negócio e HTTP Basic. Respostas anexadas são exemplos de referência, não evidências de execução real. Execute e use Save Response para registrar as respostas efetivas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "adminUser",
+      "value": "admin@trampix.local",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "adminPassword",
+      "value": "AdminTrampix123!",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "userName",
+      "value": "usuario@trampix.local",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "userPassword",
+      "value": "UsuarioTrampix123!",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "usuarioId",
+      "value": "1",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "categoriaId",
+      "value": "1",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "servicoId",
+      "value": "1",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "contratacaoId",
+      "value": "1",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "emailBanco",
+      "value": "cliente.teste@example.com",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "senhaBanco",
+      "value": "SenhaTeste123!",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "jwtTokenPrestador",
+      "value": "",
+      "type": "string",
+      "enabled": true
+    },
+    {
+      "key": "usuarioPrestadorId",
+      "value": "2",
+      "type": "string",
+      "enabled": true
+    }
+  ],
+  "item": [
+    {
+      "name": "00 - Login JWT para o frontend",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Login JWT de um usuário existente no banco. Copie o token real para a variável jwtToken. Este login é separado dos usuários HTTP Basic de demonstração.",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{emailBanco}}\",\n  \"senha\": \"{{senhaBanco}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "00 - Login JWT para o frontend — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login JWT de um usuário existente no banco. Copie o token real para a variável jwtToken. Este login é separado dos usuários HTTP Basic de demonstração.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{emailBanco}}\",\n  \"senha\": \"{{senhaBanco}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"token\": \"COPIAR_TOKEN_REAL_AQUI\",\n  \"tipo\": \"Bearer\",\n  \"expiraEm\": \"2026-11-17T22:00:00\",\n  \"usuario\": {\n    \"id\": 1,\n    \"nome\": \"Cliente Teste\",\n    \"email\": \"cliente.teste@example.com\",\n    \"perfil\": \"USUARIO\",\n    \"status\": \"ATIVO\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "01 - Cadastro de usuário",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/usuarios",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios"
+          ]
+        },
+        "description": "Cria usuário de teste; ajuste campos obrigatórios conforme validações do modelo.",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Cliente Teste\",\n  \"email\": \"cliente.teste@example.com\",\n  \"senha\": \"SenhaTeste123!\",\n  \"documento\": \"52998224725\",\n  \"dataNascimento\": \"1998-05-20\",\n  \"telefone\": \"14999990000\",\n  \"cep\": \"19900000\",\n  \"logradouro\": \"Rua de Teste\",\n  \"numero\": \"100\",\n  \"bairro\": \"Centro\",\n  \"cidade\": \"Ourinhos\",\n  \"uf\": \"SP\",\n  \"tipoDocumento\": \"CPF\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "01 - Cadastro de usuário — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "description": "Cria usuário de teste; ajuste campos obrigatórios conforme validações do modelo.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Cliente Teste\",\n  \"email\": \"cliente.teste@example.com\",\n  \"senha\": \"SenhaTeste123!\",\n  \"documento\": \"12345678901\",\n  \"dataNascimento\": \"1998-05-20\",\n  \"telefone\": \"14999990000\",\n  \"cep\": \"19900000\",\n  \"logradouro\": \"Rua de Teste\",\n  \"numero\": \"100\",\n  \"bairro\": \"Centro\",\n  \"cidade\": \"Ourinhos\",\n  \"uf\": \"SP\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": 1,\n  \"nome\": \"Cliente Teste\",\n  \"email\": \"cliente.teste@example.com\",\n  \"perfil\": \"USUARIO\",\n  \"status\": \"ATIVO\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "02 - Listar usuários (ADMIN)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/usuarios",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios"
+          ]
+        },
+        "description": "Demonstra operação administrativa protegida.",
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{adminUser}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{adminPassword}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "02 - Listar usuários (ADMIN) — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "description": "Demonstra operação administrativa protegida.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n  {\n    \"id\": 1,\n    \"nome\": \"Cliente Teste\",\n    \"email\": \"cliente.teste@example.com\"\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "03 - Consultar dashboard (usuário autenticado)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard"
+          ]
+        },
+        "description": "Demonstra os KPIs reais calculados no banco.",
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{userName}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{userPassword}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "03 - Consultar dashboard (usuário autenticado) — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard"
+              ]
+            },
+            "description": "Demonstra os KPIs reais calculados no banco.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{userName}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{userPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"totalUsuarios\": 1,\n  \"totalPrestadores\": 0,\n  \"servicosAtivos\": 0,\n  \"pedidosPendentes\": 0,\n  \"contratacoesConcluidas\": 0\n}"
+        }
+      ]
+    },
+    {
+      "name": "04 - Dashboard sem autenticação",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard"
+          ]
+        },
+        "description": "Deve retornar 401 Unauthorized.",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "response": [
+        {
+          "name": "04 - Dashboard sem autenticação — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard"
+              ]
+            },
+            "description": "Deve retornar 401 Unauthorized.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "status": "Unauthorized",
+          "code": 401,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"status\": 401,\n  \"mensagem\": \"autenticação necessária: informe usuário e senha HTTP Basic\",\n  \"erros\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "05 - Tentar criar categoria como usuário comum",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/categorias",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "categorias"
+          ]
+        },
+        "description": "Deve retornar 403 Forbidden.",
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{userName}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{userPassword}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Categoria sem permissão\",\n  \"descricao\": \"Teste de autorização\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "05 - Tentar criar categoria como usuário comum — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "Deve retornar 403 Forbidden.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{userName}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{userPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Categoria sem permissão\",\n  \"descricao\": \"Teste de autorização\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Forbidden",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"status\": 403,\n  \"mensagem\": \"você não tem permissão para esta ação\",\n  \"erros\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "06 - Criar categoria (ADMIN)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/categorias",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "categorias"
+          ]
+        },
+        "description": "Cria categoria.",
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{adminUser}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{adminPassword}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Reparos\",\n  \"descricao\": \"Serviços de reparo residencial\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "06 - Criar categoria (ADMIN) — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "Cria categoria.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Reparos\",\n  \"descricao\": \"Serviços de reparo residencial\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": 1,\n  \"nome\": \"Reparos\",\n  \"descricao\": \"Serviços de reparo residencial\",\n  \"subcategorias\": []\n}"
+        }
+      ]
+    },
+    {
+      "name": "07 - Listar categorias",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/categorias",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "categorias"
+          ]
+        },
+        "description": "Consulta pública de categorias."
+      },
+      "response": [
+        {
+          "name": "07 - Listar categorias — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "Consulta pública de categorias."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n  {\n    \"id\": 1,\n    \"nome\": \"Reparos\",\n    \"descricao\": \"Serviços de reparo residencial\",\n    \"subcategorias\": []\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "08 - Atualizar categoria (ADMIN)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/categorias/{{categoriaId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "categorias",
+            "{{categoriaId}}"
+          ]
+        },
+        "description": "Atualiza categoria.",
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{adminUser}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{adminPassword}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Reparos e manutenção\",\n  \"descricao\": \"Manutenção residencial e comercial\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "08 - Atualizar categoria (ADMIN) — resposta de referência",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categorias/{{categoriaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoriaId}}"
+              ]
+            },
+            "description": "Atualiza categoria.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Reparos e manutenção\",\n  \"descricao\": \"Manutenção residencial e comercial\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": 1,\n  \"nome\": \"Reparos e manutenção\",\n  \"descricao\": \"Manutenção residencial e comercial\",\n  \"subcategorias\": []\n}"
+        }
+      ]
+    },
+    {
+      "name": "09 - Excluir categoria logicamente (ADMIN)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/categorias/{{categoriaId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "categorias",
+            "{{categoriaId}}"
+          ]
+        },
+        "description": "Inativa a categoria; a exclusão é lógica.",
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{adminUser}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{adminPassword}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "09 - Excluir categoria logicamente (ADMIN) — resposta de referência",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categorias/{{categoriaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoriaId}}"
+              ]
+            },
+            "description": "Inativa a categoria; a exclusão é lógica.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "No Content",
+          "code": 204,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "10 - Pesquisar serviços",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/servicos?categoriaId={{categoriaId}}&subcategoriaId={{subcategoriaId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "servicos"
+          ],
+          "query": [
+            {
+              "key": "categoriaId",
+              "value": "{{categoriaId}}"
+            },
+            {
+              "key": "subcategoriaId",
+              "value": "{{subcategoriaId}}"
+            }
+          ]
+        },
+        "description": "Consulta personalizada por categoria e subcategoria usando os filtros JPQL do Spring Data JPA.",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "response": [
+        {
+          "name": "10 - Pesquisar serviços — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicos"
+              ]
+            },
+            "description": "Consulta serviços ativos. Adicione categoriaId/subcategoriaId à URL para testar filtros.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[]"
+        }
+      ]
+    },
+    {
+      "name": "11 - Consultar serviço inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/servicos/999999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "servicos",
+            "999999"
+          ]
+        },
+        "description": "Demonstra 404 Not Found.",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "response": [
+        {
+          "name": "11 - Consultar serviço inexistente — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos/999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicos",
+                "999999"
+              ]
+            },
+            "description": "Demonstra 404 Not Found.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"status\": 404,\n  \"mensagem\": \"serviço não encontrado\",\n  \"erros\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "12 - Cadastro com dados inválidos",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/usuarios",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios"
+          ]
+        },
+        "description": "Demonstra Bean Validation e 400 Bad Request.",
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"\",\n  \"email\": \"email-invalido\",\n  \"senha\": \"123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "12 - Cadastro com dados inválidos — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "description": "Demonstra Bean Validation e 400 Bad Request.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"\",\n  \"email\": \"email-invalido\",\n  \"senha\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"status\": 400,\n  \"mensagem\": \"dados inválidos\",\n  \"erros\": [\n    {\n      \"campo\": \"nome\",\n      \"mensagem\": \"não deve estar em branco\"\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "13 - Tentar categoria duplicada (ADMIN)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/categorias",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "categorias"
+          ]
+        },
+        "description": "Demonstra regra de negócio e 409 Conflict.",
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{adminUser}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{adminPassword}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Reparos\",\n  \"descricao\": \"Duplicada\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "13 - Tentar categoria duplicada (ADMIN) — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "Demonstra regra de negócio e 409 Conflict.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Reparos\",\n  \"descricao\": \"Duplicada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Conflict",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"status\": 409,\n  \"mensagem\": \"já existe uma categoria com esse nome\",\n  \"erros\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "14 - Listar serviços do prestador autenticado",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/servicos/meus",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "servicos",
+            "meus"
+          ]
+        },
+        "description": "Sem autenticação, o endpoint protegido deve retornar 401. Para testar /meus com contexto de domínio, utilize login JWT de um prestador.",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "response": [
+        {
+          "name": "14 - Listar serviços do prestador autenticado — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos/meus",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicos",
+                "meus"
+              ]
+            },
+            "description": "Requer uma sessão JWT de prestador ou usuário de domínio adequado; HTTP Basic não cria perfil de prestador.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{userName}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{userPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "Unauthorized",
+          "code": 401,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"status\": 401,\n  \"mensagem\": \"autenticação necessária\",\n  \"erros\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "15 - Consultar usuário próprio",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/usuarios/{{usuarioId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios",
+            "{{usuarioId}}"
+          ]
+        },
+        "description": "Requer token JWT obtido em POST /auth/login com usuário real cadastrado no banco.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "15 - Consultar usuário próprio — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{usuarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{usuarioId}}"
+              ]
+            },
+            "description": "A rota de domínio usa principal Usuario autenticado pelo JWT. Para este cenário, autentique pelo login JWT do sistema.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{userName}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{userPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": 1,\n  \"nome\": \"Cliente Teste\",\n  \"email\": \"cliente.teste@example.com\",\n  \"perfil\": \"USUARIO\",\n  \"status\": \"ATIVO\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "16 - Criar contratação (fluxo principal)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/contratacoes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "contratacoes"
+          ]
+        },
+        "description": "Requer JWT de cliente, serviço ativo e disponibilidade futura do prestador. Funcionalidade específica do Projeto Integrador.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"servicoId\": \"{{servicoId}}\",\n  \"dataInicio\": \"2026-12-01\",\n  \"dataFim\": \"2026-12-01\",\n  \"observacao\": \"Solicito atendimento no endereço informado.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "16 - Criar contratação (fluxo principal) — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/contratacoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contratacoes"
+              ]
+            },
+            "description": "Requer JWT de cliente, serviço ativo e disponibilidade futura do prestador.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"servicoId\": \"{{servicoId}}\",\n  \"dataInicio\": \"2026-12-01\",\n  \"dataFim\": \"2026-12-01\",\n  \"observacao\": \"Solicito atendimento no endereço informado.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": 1,\n  \"status\": \"PENDENTE\",\n  \"servicoId\": 1,\n  \"clienteId\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "17 - Listar minhas contratações",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/contratacoes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "contratacoes"
+          ]
+        },
+        "description": "Consulta as contratações do usuário autenticado.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "17 - Listar minhas contratações — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contratacoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contratacoes"
+              ]
+            },
+            "description": "Consulta as contratações do usuário autenticado.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n  {\n    \"id\": 1,\n    \"status\": \"PENDENTE\",\n    \"servicoId\": 1\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "18 - Cancelar contratação via DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/contratacoes/{{contratacaoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "contratacoes",
+            "{{contratacaoId}}"
+          ]
+        },
+        "description": "Exclusão lógica: muda o estado para CANCELADA e preserva o histórico. Só permitido em estados PENDENTE, CONTRAPROPOSTA ou ACEITA.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "18 - Cancelar contratação via DELETE — resposta de referência",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contratacoes/{{contratacaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contratacoes",
+                "{{contratacaoId}}"
+              ]
+            },
+            "description": "Exclusão lógica: muda o estado para CANCELADA e preserva o histórico. Só permitido em estados PENDENTE, CONTRAPROPOSTA ou ACEITA.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "No Content",
+          "code": 204,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "19 - Consultar histórico da contratação",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/contratacoes/{{contratacaoId}}/historico",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "contratacoes",
+            "{{contratacaoId}}",
+            "historico"
+          ]
+        },
+        "description": "Demonstra o histórico de auditoria do fluxo de contratação.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "19 - Consultar histórico da contratação — resposta de referência",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contratacoes/{{contratacaoId}}/historico",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contratacoes",
+                "{{contratacaoId}}",
+                "historico"
+              ]
+            },
+            "description": "Demonstra o histórico de auditoria do fluxo de contratação.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n  {\n    \"id\": 1,\n    \"statusAnterior\": null,\n    \"statusNovo\": \"PENDENTE\",\n    \"motivo\": null\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "20 - Prestador aceita contratação",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtTokenPrestador}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/contratacoes/{{contratacaoId}}/aceitar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "contratacoes",
+            "{{contratacaoId}}",
+            "aceitar"
+          ]
+        },
+        "description": "Troque jwtTokenPrestador por um token JWT de um prestador relacionado à contratação."
+      },
+      "response": [
+        {
+          "name": "Aceita — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "url": "{{baseUrl}}/contratacoes/{{contratacaoId}}/aceitar"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": 1,\n  \"status\": \"ACEITA\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "21 - Concluir contratação",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtTokenPrestador}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/contratacoes/{{contratacaoId}}/concluir",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "contratacoes",
+            "{{contratacaoId}}",
+            "concluir"
+          ]
+        },
+        "description": "Disponível ao prestador após a data de início e quando o status estiver ACEITA."
+      },
+      "response": [
+        {
+          "name": "Concluída — resposta de referência",
+          "originalRequest": {
+            "method": "POST",
+            "url": "{{baseUrl}}/contratacoes/{{contratacaoId}}/concluir"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": 1,\n  \"status\": \"CONCLUIDA\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "22 - Definir disponibilidade do prestador",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwtTokenPrestador}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"disponibilidades\": [\n    {\n      \"diaSemana\": \"SEGUNDA\",\n      \"horaInicio\": \"08:00\",\n      \"horaFim\": \"17:00\"\n    },\n    {\n      \"diaSemana\": \"TERCA\",\n      \"horaInicio\": \"08:00\",\n      \"horaFim\": \"17:00\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/usuarios/{{usuarioPrestadorId}}/disponibilidades",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios",
+            "{{usuarioPrestadorId}}",
+            "disponibilidades"
+          ]
+        },
+        "description": "Requer JWT do próprio prestador. Cadastre horários futuros para que clientes possam solicitar serviços."
+      },
+      "response": [
+        {
+          "name": "Disponibilidade salva — resposta de referência",
+          "originalRequest": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/usuarios/{{usuarioPrestadorId}}/disponibilidades"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n  {\n    \"id\": 1,\n    \"diaSemana\": \"SEGUNDA\",\n    \"horaInicio\": \"08:00:00\",\n    \"horaFim\": \"17:00:00\"\n  }\n]"
+        }
+      ]
+    }
+  ]
+}
