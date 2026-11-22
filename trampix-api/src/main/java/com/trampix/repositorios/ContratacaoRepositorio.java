@@ -16,6 +16,15 @@ public interface ContratacaoRepositorio extends JpaRepository<Contratacao, Long>
 
     long countByStatus(StatusContratacao status);
 
+    // há contratação do prestador (pelos serviços dele) em algum dos status?
+    boolean existsByServicoPrestadorIdAndStatusIn(Long prestadorId, java.util.Collection<StatusContratacao> status);
+
+    // há contratação em algum dos status em serviço de um prestador (pelo id do usuário)?
+    boolean existsByServicoPrestadorUsuarioIdAndStatusIn(Long usuarioId, java.util.Collection<StatusContratacao> status);
+
+    // há contratação do cliente em algum dos status?
+    boolean existsByClienteIdAndStatusIn(Long clienteId, java.util.Collection<StatusContratacao> status);
+
     // id e status de uma contratação vencida
     interface Vencida {
         Long getId();

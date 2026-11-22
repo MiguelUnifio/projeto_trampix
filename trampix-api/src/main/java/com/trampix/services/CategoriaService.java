@@ -15,14 +15,17 @@ import com.trampix.excecoes.RegraNegocioException;
 import com.trampix.recursos.CategoriaResposta;
 import com.trampix.recursos.SubcategoriaResposta;
 import com.trampix.repositorios.CategoriaRepositorio;
+import com.trampix.repositorios.ServicoRepositorio;
 import com.trampix.repositorios.SubcategoriaRepositorio;
+import com.trampix.entidades.enums.StatusServico;
 
 @Service
 public class CategoriaService {
     private final CategoriaRepositorio categorias;
     private final SubcategoriaRepositorio subcategorias;
-    public CategoriaService(CategoriaRepositorio categorias, SubcategoriaRepositorio subcategorias) {
-        this.categorias = categorias; this.subcategorias = subcategorias;
+    private final ServicoRepositorio servicos;
+    public CategoriaService(CategoriaRepositorio categorias, SubcategoriaRepositorio subcategorias, ServicoRepositorio servicos) {
+        this.categorias = categorias; this.subcategorias = subcategorias; this.servicos = servicos;
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +54,13 @@ public class CategoriaService {
         return resposta(categorias.save(categoria));
     }
     @Transactional
-    public void excluir(Long id) { Categoria categoria = buscarEntidade(id); categoria.setAtiva(false); categorias.save(categoria); }
+    public void excluir(Long id) {
+        Categoria categoria = buscarEntidade(id);
+        // regra de negócio: não exclui categoria que ainda tem serviços ativos
+        if (servicos.existsByCategoriaIdAndStatus(id, StatusServico.ATIVO))
+            throw new RegraNegocioException("não é possível excluir a categoria: existem serviços ativos associados a ela");
+        categoria.setAtiva(false); categorias.save(categoria);
+    }
     private Categoria buscarEntidade(Long id) {
         return categorias.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "categoria não encontrada"));
     }

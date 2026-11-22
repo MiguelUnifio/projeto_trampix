@@ -1,4 +1,4 @@
-package com.trampix.recursos;
+package com.trampix.services;
 
 import java.util.List;
 

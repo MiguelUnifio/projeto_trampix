@@ -8,6 +8,7 @@ import { Auth } from '../../core/services/auth';
 import { DisponibilidadeApi } from '../../core/services/disponibilidade-api';
 import { ServicoApi } from '../../core/services/servico-api';
 import { formatarHora } from '../../core/utils/periodo';
+import { imagemDaCategoria, IMAGEM_PADRAO } from '../../core/utils/imagens-servicos';
 
 // Figma "Desktop - 2": título, descrição, preço, categoria e prestador, e o botão "Solicitar serviço".
 // Sem galeria de fotos (o back ainda não tem), sem avaliações e sem chat.
@@ -90,6 +91,9 @@ export class DetalheServico implements OnInit {
     }
     this.solicitando.set(true);
   }
+
+  imagemServico(c: string): string { return imagemDaCategoria(c); }
+  imagemErro(e: Event): void { const i = e.target as HTMLImageElement; i.onerror = null; i.src = IMAGEM_PADRAO; }
 
   // "Seg 08:00–18:00"
   descreverDisponibilidade(d: Disponibilidade): string {

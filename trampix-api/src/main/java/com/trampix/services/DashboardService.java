@@ -30,7 +30,7 @@ public class DashboardService {
 
     @Transactional(readOnly = true)
     public Indicadores consultar() {
-        return new Indicadores(usuarios.count(), prestadores.count(),
+        return new Indicadores(usuarios.count(), prestadores.countByAtivoTrue(),
                 servicos.countByStatus(StatusServico.ATIVO),
                 contratacoes.countByStatus(StatusContratacao.PENDENTE),
                 contratacoes.countByStatus(StatusContratacao.CONCLUIDA));

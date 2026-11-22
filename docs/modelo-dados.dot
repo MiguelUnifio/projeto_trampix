@@ -3,7 +3,7 @@ digraph Trampix {
   node [shape=record, style="rounded,filled", fillcolor="#eef5ff", color="#3976b9", fontname="Arial", fontsize=10];
   edge [color="#64748b", fontname="Arial", fontsize=9, arrowsize=0.8];
   Usuario [label="{USUARIO|PK id\l nome\l email\l perfil\l status\l}"];
-  PrestadorPerfil [label="{PRESTADOR_PERFIL|PK id\l FK usuario_id\l biografia\l raio_atendimento_km\l verificado\l}"];
+  PrestadorPerfil [label="{PRESTADOR_PERFIL|PK id\l FK usuario_id\l biografia\l raio_atendimento_km\l agenda_cheia\l ativo\l verificado\l}"];
   Categoria [label="{CATEGORIA|PK id\l nome\l descricao\l ativa\l}"];
   Subcategoria [label="{SUBCATEGORIA|PK id\l FK categoria_id\l nome\l status\l}"];
   Servico [label="{SERVICO|PK id\l FK prestador_id\l FK categoria_id\l FK subcategoria_id\l titulo\l preco\l status\l}"];

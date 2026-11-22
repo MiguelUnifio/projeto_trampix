@@ -12,6 +12,8 @@ public interface DisponibilidadeRepositorio extends JpaRepository<Disponibilidad
 
     List<Disponibilidade> findByPrestadorId(Long prestadorId);
 
+    java.util.Optional<Disponibilidade> findByIdAndPrestadorId(Long id, Long prestadorId);
+
     // apaga os horários do prestador
     @Modifying
     @Query("delete from Disponibilidade d where d.prestador.id = :prestadorId")

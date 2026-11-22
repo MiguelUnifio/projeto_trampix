@@ -14,7 +14,6 @@ import com.trampix.entidades.Usuario;
 import com.trampix.entidades.enums.Perfil;
 import com.trampix.entidades.enums.StatusServico;
 import com.trampix.excecoes.RegraNegocioException;
-import com.trampix.recursos.CriadorSubcategoria;
 import com.trampix.recursos.ServicoRequisicao;
 import com.trampix.recursos.ServicoResposta;
 import com.trampix.repositorios.PrestadorPerfilRepositorio;
@@ -64,7 +63,7 @@ public class ServicoService {
         Servico s=buscarDoDonoOuAdmin(id,logado); s.setStatus(StatusServico.INATIVO); servicos.save(s);
     }
     private PrestadorPerfil prestadorDo(Usuario logado) {
-        return prestadores.findByUsuarioId(logado.getId()).orElseThrow(()->new ResponseStatusException(HttpStatus.FORBIDDEN,
+        return prestadores.findByUsuarioIdAndAtivoTrue(logado.getId()).orElseThrow(()->new ResponseStatusException(HttpStatus.FORBIDDEN,
                 "só prestador pode fazer isso; cadastre o primeiro serviço em POST /usuarios/{id}/prestador"));
     }
     private PrestadorPerfil travar(PrestadorPerfil p) { return prestadores.travar(p.getId()).orElseThrow(); }

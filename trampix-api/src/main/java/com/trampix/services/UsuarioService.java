@@ -12,16 +12,20 @@ import com.trampix.entidades.Usuario;
 import com.trampix.entidades.enums.Perfil;
 import com.trampix.entidades.enums.StatusUsuario;
 import com.trampix.excecoes.RegraNegocioException;
+import com.trampix.repositorios.ContratacaoRepositorio;
 import com.trampix.repositorios.UsuarioRepositorio;
 
 @Service
 public class UsuarioService {
     private final UsuarioRepositorio repositorio;
     private final PasswordEncoder passwordEncoder;
+    private final ContratacaoRepositorio contratacoes;
 
-    public UsuarioService(UsuarioRepositorio repositorio, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepositorio repositorio, PasswordEncoder passwordEncoder,
+            ContratacaoRepositorio contratacoes) {
         this.repositorio = repositorio;
         this.passwordEncoder = passwordEncoder;
+        this.contratacoes = contratacoes;
     }
 
     @Transactional(readOnly = true)
@@ -67,6 +71,10 @@ public class UsuarioService {
     @Transactional
     public void excluir(Long id) {
         Usuario usuario = buscar(id);
+        // regra de negócio: não desativa a conta com contratação em andamento (como cliente ou prestador)
+        if (contratacoes.existsByClienteIdAndStatusIn(id, PrestadorService.EM_ANDAMENTO)
+                || contratacoes.existsByServicoPrestadorUsuarioIdAndStatusIn(id, PrestadorService.EM_ANDAMENTO))
+            throw new RegraNegocioException("não é possível desativar a conta: há contratações em andamento");
         usuario.setStatus(StatusUsuario.INATIVO);
         repositorio.save(usuario);
     }

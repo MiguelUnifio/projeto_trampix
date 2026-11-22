@@ -52,6 +52,10 @@ public class PrestadorPerfil {
     @Column(name = "agenda_cheia", nullable = false)
     private boolean agendaCheia = false;
 
+    // false quando o usuário encerra o perfil de prestador (exclusão lógica)
+    @Column(nullable = false, columnDefinition = "TINYINT(1) NOT NULL DEFAULT 1")
+    private boolean ativo = true;
+
     // selo de perfil verificado
     @Column(nullable = false)
     private boolean verificado = false;

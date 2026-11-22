@@ -14,4 +14,7 @@ public interface ContratacaoHistoricoRepositorio extends Repository<ContratacaoH
 
     @EntityGraph(attributePaths = { "autor" })
     List<ContratacaoHistorico> findByContratacaoIdOrderByCriadoEmAscIdAsc(Long contratacaoId);
+
+    @EntityGraph(attributePaths = { "autor" })
+    java.util.Optional<ContratacaoHistorico> findByIdAndContratacaoId(Long id, Long contratacaoId);
 }

@@ -14,7 +14,11 @@ public interface PrestadorPerfilRepositorio extends JpaRepository<PrestadorPerfi
 
     Optional<PrestadorPerfil> findByUsuarioId(Long usuarioId);
 
-    boolean existsByUsuarioId(Long usuarioId);
+    Optional<PrestadorPerfil> findByUsuarioIdAndAtivoTrue(Long usuarioId);
+
+    boolean existsByUsuarioIdAndAtivoTrue(Long usuarioId);
+
+    long countByAtivoTrue();
 
     // busca o prestador com trava
     @Lock(LockModeType.PESSIMISTIC_WRITE)

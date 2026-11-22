@@ -78,8 +78,8 @@ public record ContratacaoResposta(
     // data em que o pedido ou a contraproposta expira
     private static LocalDateTime expiraEm(Contratacao contratacao) {
         return switch (contratacao.getStatus()) {
-            case PENDENTE -> contratacao.getCriadoEm().plus(ContratacaoRecurso.PRAZO_RESPOSTA);
-            case CONTRAPROPOSTA -> contratacao.getContrapropostaEm().plus(ContratacaoRecurso.PRAZO_RESPOSTA);
+            case PENDENTE -> contratacao.getCriadoEm().plus(com.trampix.services.ContratacaoService.PRAZO_RESPOSTA);
+            case CONTRAPROPOSTA -> contratacao.getContrapropostaEm().plus(com.trampix.services.ContratacaoService.PRAZO_RESPOSTA);
             default -> null;
         };
     }

@@ -27,6 +27,9 @@ public interface ServicoRepositorio extends JpaRepository<Servico, Long> {
 
     long countByStatus(StatusServico status);
 
+    // há serviço com esse status na categoria?
+    boolean existsByCategoriaIdAndStatus(Long categoriaId, StatusServico status);
+
     // confere se o prestador já tem serviço ativo na subcategoria
     @Query("""
             select count(s) > 0 from Servico s

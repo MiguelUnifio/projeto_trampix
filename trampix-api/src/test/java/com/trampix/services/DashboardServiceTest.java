@@ -27,7 +27,7 @@ class DashboardServiceTest {
     @Test
     void deveCalcularIndicadoresComContagensDoBanco() {
         when(usuarios.count()).thenReturn(18L);
-        when(prestadores.count()).thenReturn(6L);
+        when(prestadores.countByAtivoTrue()).thenReturn(6L);
         when(servicos.countByStatus(StatusServico.ATIVO)).thenReturn(12L);
         when(contratacoes.countByStatus(StatusContratacao.PENDENTE)).thenReturn(3L);
         when(contratacoes.countByStatus(StatusContratacao.CONCLUIDA)).thenReturn(9L);

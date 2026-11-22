@@ -26,6 +26,7 @@ public class SubcategoriaRecurso {
  private final SubcategoriaService service;
  public SubcategoriaRecurso(SubcategoriaService service){this.service=service;}
  @GetMapping public List<SubcategoriaResposta> listar(@PathVariable Long categoriaId){return service.listar(categoriaId);}
+ @GetMapping("/{id}") public SubcategoriaResposta buscar(@PathVariable Long categoriaId,@PathVariable Long id){return service.buscar(categoriaId,id);}
  @PostMapping @ResponseStatus(HttpStatus.CREATED) public SubcategoriaResposta criar(@PathVariable Long categoriaId,@Valid @RequestBody SubcategoriaRequisicao req,@AuthenticationPrincipal Usuario logado){return service.criar(categoriaId,req,logado);}
  @PutMapping("/{id}") public SubcategoriaResposta atualizar(@PathVariable Long categoriaId,@PathVariable Long id,@Valid @RequestBody AtualizarRequisicao req){return service.atualizar(categoriaId,id,req);}
  @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT) public void inativar(@PathVariable Long categoriaId,@PathVariable Long id){service.inativar(categoriaId,id);}

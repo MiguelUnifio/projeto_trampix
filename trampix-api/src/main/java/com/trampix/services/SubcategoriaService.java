@@ -11,7 +11,6 @@ import com.trampix.entidades.Usuario;
 import com.trampix.entidades.enums.Perfil;
 import com.trampix.entidades.enums.StatusSubcategoria;
 import com.trampix.excecoes.RegraNegocioException;
-import com.trampix.recursos.CriadorSubcategoria;
 import com.trampix.recursos.SubcategoriaRecurso.AtualizarRequisicao;
 import com.trampix.recursos.SubcategoriaRecurso.SubcategoriaRequisicao;
 import com.trampix.recursos.SubcategoriaResposta;
@@ -24,8 +23,9 @@ public class SubcategoriaService {
  private final SubcategoriaRepositorio subcategorias; private final CategoriaRepositorio categorias; private final PrestadorPerfilRepositorio prestadores; private final CriadorSubcategoria criador;
  public SubcategoriaService(SubcategoriaRepositorio s,CategoriaRepositorio c,PrestadorPerfilRepositorio p,CriadorSubcategoria cr){subcategorias=s;categorias=c;prestadores=p;criador=cr;}
  @Transactional(readOnly=true) public List<SubcategoriaResposta> listar(Long categoriaId){buscarCategoria(categoriaId);return subcategorias.findByCategoriaIdAndStatusOrderById(categoriaId,StatusSubcategoria.ATIVA).stream().map(SubcategoriaResposta::de).toList();}
+ @Transactional(readOnly=true) public SubcategoriaResposta buscar(Long categoriaId,Long id){buscarCategoria(categoriaId);return SubcategoriaResposta.de(buscarSubcategoria(categoriaId,id));}
  @Transactional public SubcategoriaResposta criar(Long categoriaId,SubcategoriaRequisicao req,Usuario logado){
-  boolean admin=logado.getPerfil()==Perfil.ADMIN;if(!admin&&!prestadores.existsByUsuarioId(logado.getId()))throw new ResponseStatusException(HttpStatus.FORBIDDEN,"só prestador ou ADMIN pode criar subcategoria");
+  boolean admin=logado.getPerfil()==Perfil.ADMIN;if(!admin&&!prestadores.existsByUsuarioIdAndAtivoTrue(logado.getId()))throw new ResponseStatusException(HttpStatus.FORBIDDEN,"só prestador ou ADMIN pode criar subcategoria");
   Categoria categoria=buscarCategoria(categoriaId);CriadorSubcategoria.Resultado resultado=criador.obterOuCriar(categoria,req.nome(),req.descricao(),logado);Subcategoria sub=resultado.subcategoria();
   if(sub.getStatus()!=StatusSubcategoria.ATIVA)throw new RegraNegocioException("já existe a subcategoria "+sub.getNome()+" nesta categoria, mas está inativa");return SubcategoriaResposta.de(sub);
  }

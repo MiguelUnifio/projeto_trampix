@@ -1,4 +1,4 @@
-package com.trampix.recursos;
+package com.trampix.services;
 
 import java.time.LocalDateTime;
 
@@ -30,7 +30,7 @@ public class ExpiradorContratacao {
     public void expirarVencidas() {
         LocalDateTime agora = LocalDateTime.now();
         for (ContratacaoRepositorio.Vencida vencida : repositorio.vencidas(StatusContratacao.PENDENTE,
-                StatusContratacao.CONTRAPROPOSTA, agora.minus(ContratacaoRecurso.PRAZO_RESPOSTA))) {
+                StatusContratacao.CONTRAPROPOSTA, agora.minus(ContratacaoService.PRAZO_RESPOSTA))) {
             if (repositorio.trocarStatus(vencida.getId(), vencida.getStatus(), StatusContratacao.EXPIRADA, agora) == 1) {
                 Contratacao contratacao = repositorio.getReferenceById(vencida.getId());
                 historicoRepositorio.save(new ContratacaoHistorico(contratacao, null, vencida.getStatus(),
