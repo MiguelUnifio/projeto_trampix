@@ -568,7 +568,7 @@ O frontend do Trampix está publicado na Vercel e possui um repositório indepen
 
 ### Aplicação publicada
 
-**https://projeto-trampix.vercel.app/**
+**https://trampix-front.vercel.app/**
 
 ### Repositório do frontend
 
