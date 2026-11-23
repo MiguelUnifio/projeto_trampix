@@ -78,6 +78,7 @@ Principais funcionalidades:
 - Docker
 - Visual Studio Code
 - Dev Containers
+- GitHub Codespaces
 
 ## Arquitetura
 
@@ -149,11 +150,12 @@ O frontend também possui um repositório separado:
 
 ### Pré-requisitos
 
-Para executar o backend localmente, é necessário:
+Para executar o projeto, são necessários:
 
 - Git
 - Java JDK 21
-- Docker Desktop
+- Docker
+- Node.js e npm (para executar o frontend)
 - Postman (opcional, para testes da API)
 
 Não é necessário instalar o MySQL diretamente no computador. O banco de dados será executado em um container Docker.
@@ -169,7 +171,7 @@ cd projeto_trampix
 
 ### 2. Criar o banco MySQL utilizando Docker
 
-Certifique-se de que o Docker Desktop esteja aberto e em execução.
+Certifique-se de que o Docker esteja aberto e em execução.
 
 Crie o container MySQL com o banco `trampix`, utilizando as credenciais padrão do projeto:
 
@@ -204,6 +206,8 @@ Arquivo:
 trampix_backup.sql
 ```
 
+**Importante:** a importação deve ser executada na pasta raiz do repositório, onde está localizado o arquivo `trampix_backup.sql`, e não dentro da pasta `trampix-api`.
+
 A importação deve ser realizada após a criação e inicialização do container MySQL.
 
 #### Windows (PowerShell)
@@ -214,7 +218,7 @@ Na pasta raiz do projeto, execute:
 Get-Content .\trampix_backup.sql -Raw | docker exec -i trampix-mysql mysql -uroot -ptrampix123 trampix
 ```
 
-#### Linux / macOS / Git Bash
+#### Linux / macOS / Git Bash / Codespaces
 
 Na pasta raiz do projeto, execute:
 
@@ -279,21 +283,21 @@ As configurações podem ser ajustadas por variáveis de ambiente.
 
 As variáveis de ambiente são opcionais para a execução local, pois o projeto já possui valores padrão de desenvolvimento.
 
-### 5. Executar o backend
+### 5. Executar o backend (Windows/Linux)
+
+> **Está utilizando o GitHub Codespaces?** Pule esta seção e vá diretamente para a [Seção 6 — Executando o projeto no GitHub Codespaces](#6-executando-o-projeto-no-github-codespaces).
 
 #### Windows
 
-```cmd
-mvnw.cmd spring-boot:run
-```
+Dentro da pasta `trampix-api`, execute:
 
-Se o comando não funcionar no terminal, utilize:
-
-```cmd
+```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
 #### Linux / macOS
+
+Dentro da pasta `trampix-api`, execute:
 
 ```bash
 chmod +x mvnw
@@ -308,17 +312,114 @@ O backend poderá inicializar as tabelas e dados básicos necessários à aplica
 
 Para executar os testes automatizados:
 
-**Windows**
+**Windows:**
 
-```cmd
-mvnw.cmd test
+```powershell
+.\mvnw.cmd test
 ```
 
-**Linux / macOS**
+**Linux / macOS:**
 
 ```bash
 ./mvnw test
 ```
+
+### 6. Executar o projeto no GitHub Codespaces
+
+O projeto também pode ser executado diretamente pelo GitHub Codespaces, sem a necessidade de configurar manualmente Java, Maven e MySQL no computador.
+
+Depois de criar um Codespace a partir do repositório, siga as etapas anteriores para criar o banco MySQL e importar o backup.
+
+#### 6.1. Iniciar o backend
+
+Abra um terminal no Codespace e acesse a pasta do backend:
+
+```bash
+cd /workspaces/projeto_trampix/trampix-api
+```
+
+Configure as credenciais do banco de dados:
+
+```bash
+export DB_USERNAME=root
+export DB_PASSWORD=trampix123
+```
+
+Configure a origem autorizada para o frontend do próprio Codespace:
+
+```bash
+export TRAMPIX_CORS_ORIGENS="https://${CODESPACE_NAME}-4200.app.github.dev"
+```
+
+Conceda permissão de execução ao Maven Wrapper e inicie o Spring Boot:
+
+```bash
+chmod +x mvnw
+
+./mvnw spring-boot:run
+```
+
+Aguarde até o Spring Boot informar que a aplicação foi iniciada.
+
+#### 6.2. Tornar a porta 8080 pública
+
+Após iniciar o backend:
+
+1. Abra a aba **Ports** no VS Code do Codespace.
+2. Localize a porta `8080`.
+3. Clique com o botão direito sobre a porta ou abra o menu de opções.
+4. Selecione **Port Visibility**.
+5. Altere a visibilidade para **Public**.
+6. Copie o endereço encaminhado da porta `8080`, se necessário.
+
+**Importante:** a porta `8080` precisa estar pública para permitir o acesso ao backend pelo navegador e pelo frontend.
+
+O endereço público será semelhante a:
+
+```text
+https://NOME-DO-CODESPACE-8080.app.github.dev
+```
+
+O nome e o endereço variam conforme o Codespace criado.
+
+
+#### 6.3 Instalar as dependências do frontend
+
+Abra um **novo terminal** no Codespace, sem encerrar o terminal em que o backend está rodando.
+
+Acesse a pasta do Angular:
+
+```bash
+cd /workspaces/projeto_trampix/trampix
+```
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Aguarde a instalação finalizar.
+
+#### 6.4. Iniciar o frontend
+
+Execute:
+
+```bash
+npm start -- --host 0.0.0.0
+```
+
+O Angular será iniciado na porta `4200`.
+
+#### 6.6. Abrir o frontend no navegador
+
+1. Abra a aba **Ports** no VS Code do Codespace.
+2. Localize a porta `4200`.
+3. Clique em **Open in Browser**.
+
+O frontend será aberto no navegador e poderá realizar requisições ao backend iniciado na porta `8080`.
+
+**Importante:** mantenha os terminais do backend e do frontend em execução enquanto estiver utilizando a aplicação.
 
 ## Usuários de demonstração
 
@@ -344,6 +445,8 @@ Consultar categorias:
 ```bash
 curl http://localhost:8080/categorias
 ```
+
+No Codespaces, substitua o endereço local pelo endereço público da porta `8080`.
 
 #### Endpoint autenticado
 
@@ -473,7 +576,9 @@ O frontend do Trampix está publicado na Vercel e possui um repositório indepen
 
 A versão publicada é uma demonstração frontend independente, que simula as operações da plataforma utilizando dados locais do navegador (`localStorage`), permitindo visualizar e executar o fluxo principal da aplicação sem a necessidade de iniciar o backend.
 
-A API REST real pode ser executada localmente conforme as instruções deste README e testada utilizando o Postman.
+O frontend localizado na pasta `trampix/` deste repositório pode ser executado em conjunto com o backend, conforme as instruções da seção de GitHub Codespaces.
+
+A API REST real pode ser executada localmente ou no Codespaces e testada utilizando o Postman.
 
 ## Publicação do backend
 
