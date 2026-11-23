@@ -1,109 +1,500 @@
-# Trampix — Plataforma de contratação de serviços (Projeto Integrador)
 
-O **Trampix** conecta clientes a prestadores de serviços (pedreiro, eletricista, diarista etc.). O cliente pesquisa serviços, escolhe data e horário, e o prestador aceita, recusa ou envia uma contraproposta; o sistema controla disponibilidade, conflitos de agenda, preços e o histórico de cada contratação.
+# Trampix — Plataforma de Contratação de Serviços
 
-**Objetivo do backend:** API REST (Spring Boot) que gerencia usuários, prestadores, categorias, subcategorias, serviços, disponibilidades e contratações, com regras de negócio, validação, segurança e consultas personalizadas. **Objetivo do frontend:** aplicação Angular que executa o fluxo principal do início ao fim pela interface.
+**Projeto Integrador — Backend REST API**
 
-## Integrantes
+Backend desenvolvido em Java e Spring Boot para uma plataforma de contratação de serviços, conectando clientes a prestadores de serviços.
 
-> **PREENCHER antes da entrega** — nome completo e ID acadêmico de todos os integrantes.
+## Descrição da aplicação
 
-| Nome completo | ID acadêmico |
+O **Trampix** conecta clientes a prestadores de serviços como pedreiros, eletricistas, encanadores, pintores, diaristas e outros profissionais.
+
+O cliente pode pesquisar serviços por categoria, selecionar uma data e horário e enviar uma solicitação de contratação. O prestador pode aceitar, recusar ou enviar uma contraproposta.
+
+A plataforma controla a disponibilidade dos prestadores, impede conflitos de agenda, calcula preços conforme o tipo de cobrança e mantém o histórico das contratações.
+
+## Objetivo do backend
+
+O backend (`trampix-api`) é uma API REST responsável por centralizar os dados e as regras de negócio da aplicação.
+
+Principais funcionalidades:
+
+- Gerenciamento de usuários e perfis de prestadores.
+- Gerenciamento de categorias e subcategorias.
+- Cadastro, consulta, edição e exclusão de serviços.
+- Controle de disponibilidades e horários de atendimento.
+- Sistema de contratações e contrapropostas.
+- Validação de dados, incluindo CPF e CNPJ.
+- Controle de conflitos de agenda.
+- Cálculo de preços por hora ou por diária.
+- Expiração de solicitações após 7 dias.
+- Autenticação e autorização com Spring Security.
+- Histórico de alterações das contratações.
+- Dashboard com indicadores calculados a partir do banco de dados.
+
+## Integrantes do grupo
+
+| Integrante | RA |
+|---|---:|
+| Carlos Henrique Beltramo Rodrigues | 272766 |
+| Davi Ferreira Corsini | 272409 |
+| Diego Marques Martins | 272392 |
+| Miguel Fernando Santos Prevedeli | 272671 |
+| Nathalia de Almeida Grandizoli | 273239 |
+| Sthefany de Carvalho Pereira | 272940 |
+
+## Tecnologias utilizadas
+
+### Backend
+
+| Tecnologia | Utilização |
 |---|---|
-| PREENCHER | PREENCHER |
-| PREENCHER | PREENCHER |
+| Java 21 | Linguagem de programação |
+| Spring Boot 4.1.1 | Framework para API REST |
+| Spring Data JPA | Persistência e consultas ao banco |
+| Hibernate | ORM |
+| Bean Validation | Validação de dados |
+| Spring Security | Autenticação e autorização |
+| HTTP Basic | Autenticação para endpoints protegidos |
+| JWT (HS256) | Autenticação via token |
+| MySQL 8 | Banco de dados relacional |
+| Maven Wrapper | Gerenciamento e execução do projeto |
+| Lombok | Redução de código repetitivo |
+| JUnit 5 | Testes |
+| Mockito | Testes de serviços |
 
-## Tecnologias
+### Frontend
 
-- **Backend:** Java 21, Spring Boot, Spring Data JPA/Hibernate, Bean Validation, Spring Security (HTTP Basic; JWT apenas para o frontend), MySQL, Maven, Lombok, JUnit/Mockito.
-- **Frontend:** Angular (NgModules, `standalone: false`, roteamento, sem SSR), Angular Material, TypeScript, RxJS.
-- **Testes manuais:** Postman.
+- Angular 22
+- TypeScript
+- Angular Material
+- RxJS
+- NgModules
+
+### Ferramentas
+
+- Git e GitHub
+- Postman
+- Docker
+- Visual Studio Code
+- Dev Containers
+
+## Arquitetura
+
+O projeto utiliza arquitetura em camadas, separando responsabilidades:
+
+```text
+Entidades (JPA)
+      ↓
+Repositórios (Spring Data)
+      ↓
+Services (Regras de negócio)
+      ↓
+Controllers REST + DTOs
+```
+
+- **Entidades:** representam os dados e relacionamentos do sistema.
+- **Repositórios:** responsáveis pelas operações de persistência e consultas.
+- **Services:** centralizam as regras de negócio.
+- **Controllers:** recebem as requisições HTTP e retornam respostas da API.
+- **DTOs:** controlam os dados de entrada e saída.
+- **TratadorErros:** padroniza as respostas de erro.
+- **RegraNegocioException:** representa conflitos e regras de negócio, retornando HTTP 409.
+
+Os controllers não acessam diretamente os repositórios. As operações são realizadas por meio da camada de serviços.
+
+### Modelo de dados
+
+O sistema possui 8 entidades principais:
+
+1. `Usuario`
+2. `PrestadorPerfil`
+3. `Categoria`
+4. `Subcategoria`
+5. `Servico`
+6. `Disponibilidade`
+7. `Contratacao`
+8. `ContratacaoHistorico`
+
+O diagrama do modelo de dados está disponível em:
+
+`docs/modelo-dados.png`
 
 ## Estrutura do repositório
 
 ```text
-├── README.md
+projeto_trampix/
 ├── docs/
-│   ├── documentacao-api.md      # endpoints, segurança, regras de negócio
-│   ├── modelo-dados.png         # diagrama entidade-relacionamento
-│   └── modelo-dados.dot         # fonte editável do diagrama
+│   ├── documentacao-api.md
+│   └── modelo-dados.png
 ├── postman/
 │   └── projeto-integrador.postman_collection.json
-├── trampix-api/                 # backend Spring Boot (pom.xml)
-└── trampix/                     # frontend Angular
+├── trampix-api/
+│   ├── src/
+│   ├── pom.xml
+│   └── mvnw
+├── trampix/
+│   └── frontend Angular (versão do projeto original)
+├── .gitignore
+├── README.md
+├── popular_trampix.py
+└── trampix_backup.sql
 ```
 
-## Como executar o backend
+O frontend também possui um repositório separado:
 
-1. Instale Java 21 e MySQL 8 (ou use o Dev Container em `trampix-api/.devcontainer`).
-2. O banco `trampix` é criado automaticamente. Defina `DB_USERNAME` e `DB_PASSWORD` (padrão: `root` e senha vazia).
-3. Na pasta `trampix-api`: `./mvnw spring-boot:run` (Linux/macOS) ou `mvnw.cmd spring-boot:run` (Windows). Para rodar os testes: `./mvnw test`.
-4. A API sobe em `http://localhost:8080`. Na primeira execução são criadas as categorias padrão e os usuários de teste.
+**GitHub:** https://github.com/MiguelUnifio/trampix-front
 
-Variáveis opcionais: `DB_URL`, `TRAMPIX_CORS_ORIGENS` (origens do frontend, separadas por vírgula; padrão `http://localhost:4200`), `TRAMPIX_JWT_SEGREDO`, `TRAMPIX_ADMIN_EMAIL`/`TRAMPIX_ADMIN_SENHA`.
+## Como configurar e executar o projeto
 
-### Usuários HTTP Basic (somente teste)
+### Pré-requisitos
+
+Para executar o backend localmente, é necessário:
+
+- Git
+- Java JDK 21
+- Docker Desktop
+- Postman (opcional, para testes da API)
+
+Não é necessário instalar o MySQL diretamente no computador. O banco de dados será executado em um container Docker.
+
+### 1. Clonar o repositório
+
+Abra o terminal e execute:
+
+```bash
+git clone https://github.com/MiguelUnifio/projeto_trampix.git
+cd projeto_trampix
+```
+
+### 2. Criar o banco MySQL utilizando Docker
+
+Certifique-se de que o Docker Desktop esteja aberto e em execução.
+
+Crie o container MySQL com o banco `trampix`, utilizando as credenciais padrão do projeto:
+
+- **Banco:** `trampix`
+- **Usuário:** `root`
+- **Senha:** `trampix123`
+- **Porta:** `3306`
+
+Execute:
+
+```bash
+docker run -d --name trampix-mysql -e MYSQL_ROOT_PASSWORD=trampix123 -e MYSQL_DATABASE=trampix -p 3306:3306 mysql:8.0
+```
+
+Verifique se o container está rodando:
+
+```bash
+docker ps
+```
+
+O container `trampix-mysql` deverá aparecer na lista.
+
+> Caso o container já exista, não execute novamente o comando de criação. Verifique se ele está ativo com `docker ps -a` e, se estiver parado, inicie com `docker start trampix-mysql`.
+
+### 3. Importar o backup do banco de dados
+
+O projeto possui um backup SQL com dados de exemplo, usuários, categorias, serviços e registros utilizados para facilitar a demonstração.
+
+Arquivo:
+
+```text
+trampix_backup.sql
+```
+
+A importação deve ser realizada após a criação e inicialização do container MySQL.
+
+#### Windows (PowerShell)
+
+Na pasta raiz do projeto, execute:
+
+```powershell
+Get-Content .\trampix_backup.sql -Raw | docker exec -i trampix-mysql mysql -uroot -ptrampix123 trampix
+```
+
+#### Linux / macOS / Git Bash
+
+Na pasta raiz do projeto, execute:
+
+```bash
+docker exec -i trampix-mysql mysql -uroot -ptrampix123 trampix < trampix_backup.sql
+```
+
+Aguarde o comando finalizar. Se não houver mensagens de erro, a importação foi executada.
+
+> O aviso de utilização de senha na linha de comando pode aparecer durante a importação. Esse aviso é informativo e não significa que o procedimento falhou.
+
+#### Verificar se os dados foram importados
+
+Execute:
+
+```bash
+docker exec -it trampix-mysql mysql -uroot -ptrampix123 -D trampix
+```
+
+No prompt do MySQL, execute:
+
+```sql
+SHOW TABLES;
+```
+
+Para sair:
+
+```sql
+exit;
+```
+
+### 4. Configuração do backend
+
+Acesse a pasta do backend:
+
+```bash
+cd trampix-api
+```
+
+As configurações padrão utilizam:
+
+| Configuração | Valor |
+|---|---|
+| Banco | `trampix` |
+| Host | `localhost` |
+| Porta MySQL | `3306` |
+| Usuário | `root` |
+| Senha | `trampix123` |
+| Porta da API | `8080` |
+
+As configurações podem ser ajustadas por variáveis de ambiente.
+
+| Variável | Valor padrão / finalidade |
+|---|---|
+| `DB_URL` | `jdbc:mysql://localhost:3306/trampix?createDatabaseIfNotExist=true&serverTimezone=America/Sao_Paulo` |
+| `DB_USERNAME` | `root` |
+| `DB_PASSWORD` | `trampix123` |
+| `TRAMPIX_JWT_SEGREDO` | Segredo utilizado para assinatura JWT |
+| `TRAMPIX_CORS_ORIGENS` | Origens autorizadas para acesso à API |
+| `TRAMPIX_ADMIN_EMAIL` | E-mail para criação do administrador inicial, se necessário |
+| `TRAMPIX_ADMIN_SENHA` | Senha do administrador inicial, se necessário |
+
+As variáveis de ambiente são opcionais para a execução local, pois o projeto já possui valores padrão de desenvolvimento.
+
+### 5. Executar o backend
+
+#### Windows
+
+```cmd
+mvnw.cmd spring-boot:run
+```
+
+Se o comando não funcionar no terminal, utilize:
+
+```cmd
+.\mvnw.cmd spring-boot:run
+```
+
+#### Linux / macOS
+
+```bash
+chmod +x mvnw
+./mvnw spring-boot:run
+```
+
+A API será disponibilizada em:
+
+**http://localhost:8080**
+
+O backend poderá inicializar as tabelas e dados básicos necessários à aplicação, conforme sua configuração. Com o backup importado, os registros de demonstração estarão disponíveis no banco.
+
+Para executar os testes automatizados:
+
+**Windows**
+
+```cmd
+mvnw.cmd test
+```
+
+**Linux / macOS**
+
+```bash
+./mvnw test
+```
+
+## Usuários de demonstração
+
+O banco de dados disponibiliza usuários de teste para demonstrar os níveis de acesso.
 
 | Perfil | Usuário | Senha |
 |---|---|---|
 | ADMIN | `admin@trampix.local` | `AdminTrampix123!` |
 | USUARIO | `usuario@trampix.local` | `UsuarioTrampix123!` |
 
-Configurados em memória e espelhados no banco. Contas criadas por `POST /usuarios` também podem usar Basic. `401` = sem credenciais/credenciais inválidas; `403` = autenticado sem permissão.
+Essas credenciais são destinadas exclusivamente à demonstração e aos testes do projeto.
 
-## Como executar o frontend
+Contas adicionais podem ser criadas pela API, utilizando o endpoint de cadastro de usuários.
 
-1. Node.js 22.22+ (requisito do Angular 22).
-2. Na pasta `trampix`: `npm ci` e `npm start` → `http://localhost:4200` (usa `http://localhost:8080` como API).
+## Testando a API
 
-## Publicação (versão publicada do sistema)
+### Exemplos utilizando cURL
 
-- **Frontend:** `npm run build` gera `trampix/dist/trampix/browser`. Antes, troque `apiUrl` em `trampix/src/environments/environment.ts` pela URL pública da API. O projeto já traz `public/_redirects` (Netlify) e `vercel.json` para as rotas do Angular funcionarem ao recarregar a página. Publique essa pasta em Netlify, Vercel, GitHub Pages ou similar.
-- **Backend:** publique `trampix-api` em um serviço Java (Render, Railway, Azure...) com um MySQL gerenciado, definindo `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `TRAMPIX_JWT_SEGREDO` e `TRAMPIX_CORS_ORIGENS` com a URL do frontend publicado.
-- Registre abaixo as URLs finais:
-  - Frontend: _PREENCHER_
-  - API: _PREENCHER_
+#### Endpoint público
 
-## Auditoria dos enunciados
+Consultar categorias:
 
-Consulte `docs/AUDITORIA-ENUNCIADOS.md` para a checklist requisito por requisito dos Trabalhos 1 e 2, com os itens inspecionados, pendências de entrega e limitações de build/teste deste ambiente.
+```bash
+curl http://localhost:8080/categorias
+```
 
-## Modelo de dados
+#### Endpoint autenticado
 
-Diagrama em `docs/modelo-dados.png`: **8 entidades** — `Usuario`, `PrestadorPerfil`, `Categoria`, `Subcategoria`, `Servico`, `Disponibilidade`, `Contratacao` e `ContratacaoHistorico` — com relacionamentos 1:N e 1:0..1 mapeados com JPA/MySQL.
+Consultar os serviços do usuário autenticado:
 
-## Arquitetura em camadas
+```bash
+curl -u usuario@trampix.local:UsuarioTrampix123! http://localhost:8080/servicos/meus
+```
 
-- **entidades** (JPA) → **repositorios** (Spring Data JPA) → **services** (regras de negócio e transações) → **recursos** (controllers REST e DTOs).
-- Os controllers **não acessam repositories**: só chamam os services. Toda regra de negócio (validações de domínio, conflito de agenda, transições de status, cálculo de preço) está em `services/`.
-- Erros tratados em `TratadorErros` (`@RestControllerAdvice`) com a exceção personalizada `RegraNegocioException` (409).
+### Postman
 
-## CRUD por entidade
+A coleção de testes está disponível em:
 
-| Entidade | Criar | Consultar | Atualizar | Excluir |
-|---|---|---|---|---|
-| Usuario | `POST /usuarios` | `GET /usuarios`, `/{id}` | `PUT /usuarios/{id}` | `DELETE` (desativa) |
-| PrestadorPerfil | `POST /usuarios/{id}/prestador` | `GET` | `PUT` | `DELETE` (encerra) |
-| Categoria | `POST /categorias` | `GET` lista/id | `PUT` | `DELETE` (inativa) |
-| Subcategoria | `POST .../subcategorias` | `GET` lista/id | `PUT` | `DELETE` (inativa) |
-| Servico | `POST /servicos` | `GET` lista/id/meus | `PUT` | `DELETE` (inativa) |
-| Disponibilidade | `POST` (um) / `PUT` (todos) | `GET` lista/id | `PUT .../{id}` | `DELETE .../{id}` |
-| Contratacao | `POST /contratacoes` | `GET` lista/id | `PUT` (pedido PENDENTE) | `DELETE` (cancela) |
-| ContratacaoHistorico | gerado pelo sistema | `GET .../historico` | — | — |
+```text
+postman/projeto-integrador.postman_collection.json
+```
 
-`ContratacaoHistorico` é trilha de auditoria imutável: por regra de domínio só é criada pelo sistema e consultada. Detalhes em `docs/documentacao-api.md`.
+Para executar:
 
-## Testes com Postman
+1. Abra o Postman.
+2. Clique em **Import**.
+3. Selecione o arquivo `projeto-integrador.postman_collection.json`.
+4. Abra a coleção importada.
+5. Confira as variáveis da coleção, caso solicitado.
+6. Execute as requisições individualmente ou pelo **Collection Runner**.
 
-1. Importe `postman/projeto-integrador.postman_collection.json` (as variáveis já vão incluídas).
-2. Com API e MySQL no ar, execute no **Collection Runner** na ordem (a requisição `00` gera dados únicos).
-3. A coleção cobre: CRUD de todas as entidades, consultas personalizadas, regras de negócio (409), validação (400), inexistentes (404), Basic válido, sem autenticação (401), sem permissão (403) e o fluxo de contratação. Cada requisição já valida o status esperado.
-4. **Para a entrega:** após rodar, use **Save Response** em cada requisição para guardar as respostas reais e exporte a coleção novamente (marcando *Share* das variáveis) sobre este arquivo.
+A coleção contempla:
 
-## Funcionalidade específica
+- CRUD das entidades.
+- Cadastro e consulta de registros.
+- Atualização e exclusão.
+- Consultas personalizadas.
+- Regras de negócio.
+- Validação de dados.
+- Recursos inexistentes.
+- Autenticação.
+- Requisições sem autenticação.
+- Controle de permissões.
+- Respostas HTTP 400, 401, 403, 404 e 409.
+- Fluxo de contratação.
 
-**Contratação de serviços com controle de disponibilidade:** o prestador define horários; o cliente solicita por dia ou por hora; o sistema valida data e disponibilidade, calcula o preço, impede conflito de agenda e conduz o pedido por aceite, contraproposta, recusa, cancelamento, expiração (7 dias) e conclusão, registrando o histórico.
+## Documentação da API
 
-## Dashboard (frontend)
+A documentação completa, contendo os endpoints, métodos HTTP, parâmetros, exemplos e regras de acesso, está disponível em:
 
-Tela `/dashboard` com 5 KPIs (usuários, prestadores, serviços ativos, pedidos pendentes e contratações concluídas), calculados no backend a partir do banco.
+`docs/documentacao-api.md`
+
+### Principais endpoints
+
+| Recurso | Endpoints | Acesso |
+|---|---|---|
+| Autenticação | `POST /auth/login` | Público |
+| Usuários | `/usuarios` | Cadastro público; demais operações protegidas |
+| Prestador | `/usuarios/{id}/prestador` | Próprio usuário ou ADMIN |
+| Disponibilidades | `/usuarios/{id}/disponibilidades` | Leitura pública; escrita protegida |
+| Categorias | `/categorias` | Leitura pública; escrita ADMIN |
+| Subcategorias | `/categorias/{id}/subcategorias` | Conforme permissões |
+| Serviços | `/servicos` | Leitura pública; escrita protegida |
+| Contratações | `/contratacoes` | Autenticado |
+| Dashboard | `/dashboard` | Autenticado |
+
+### Autenticação
+
+O sistema oferece autenticação por HTTP Basic e JWT, conforme a configuração dos endpoints.
+
+- **HTTP Basic:** envia e-mail e senha nas credenciais de autenticação.
+- **JWT:** obtém um token por meio do endpoint de login e utiliza o token Bearer nas requisições protegidas.
+
+As permissões controlam o acesso de usuários comuns e administradores.
+
+## Funcionalidade específica — Contratação e controle de disponibilidade
+
+O principal fluxo de negócio do Trampix é o sistema de contratação de serviços.
+
+1. O prestador cadastra suas disponibilidades.
+2. O cliente seleciona um serviço.
+3. O cliente solicita uma data e horário.
+4. O sistema verifica a disponibilidade do prestador.
+5. O sistema calcula o preço conforme o tipo de cobrança.
+6. A solicitação é registrada como pendente.
+7. O prestador pode aceitar, recusar ou enviar uma contraproposta.
+8. O sistema impede conflitos de agenda.
+9. Contratações aceitas podem ser concluídas.
+10. As mudanças de status são registradas no histórico.
+
+### Estados da contratação
+
+```text
+PENDENTE
+ ├── ACEITA
+ │    └── CONCLUIDA
+ ├── CONTRAPROPOSTA
+ ├── RECUSADA
+ ├── CANCELADA
+ └── EXPIRADA
+```
+
+Solicitações e contrapropostas sem resposta dentro do prazo estabelecido de 7 dias podem ser expiradas automaticamente.
+
+Cada alteração relevante é registrada na entidade `ContratacaoHistorico`, permitindo consultar a evolução da contratação.
+
+## Dashboard
+
+O backend disponibiliza o endpoint `/dashboard`, responsável por fornecer indicadores calculados a partir dos dados do sistema.
+
+Os indicadores incluem:
+
+- Total de usuários.
+- Total de prestadores ativos.
+- Serviços ativos.
+- Contratações pendentes.
+- Contratações concluídas.
+
+Esses dados são utilizados pelo frontend para exibir o resumo operacional da plataforma.
+
+## Frontend e publicação
+
+O frontend do Trampix está publicado na Vercel e possui um repositório independente.
+
+### Aplicação publicada
+
+**https://projeto-trampix.vercel.app/**
+
+### Repositório do frontend
+
+**https://github.com/MiguelUnifio/trampix-front**
+
+A versão publicada é uma demonstração frontend independente, que simula as operações da plataforma utilizando dados locais do navegador (`localStorage`), permitindo visualizar e executar o fluxo principal da aplicação sem a necessidade de iniciar o backend.
+
+A API REST real pode ser executada localmente conforme as instruções deste README e testada utilizando o Postman.
+
+## Publicação do backend
+
+O backend pode ser publicado em um serviço de hospedagem compatível com Java/Spring Boot, utilizando um banco MySQL gerenciado.
+
+Para ambientes de produção, devem ser configuradas as variáveis:
+
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `TRAMPIX_JWT_SEGREDO`
+- `TRAMPIX_CORS_ORIGENS`
+
+As credenciais padrão deste README são destinadas ao ambiente local de desenvolvimento e demonstração.
+
+## Considerações finais
+
+O Trampix foi desenvolvido como Projeto Integrador, aplicando conceitos de desenvolvimento de APIs REST, arquitetura em camadas, persistência relacional, autenticação, autorização, validação de dados e regras de negócio.
+
+O projeto integra backend e frontend, oferecendo uma plataforma de demonstração para contratação de serviços, com controle de disponibilidade, gestão de solicitações e acompanhamento do processo de contratação.
+
+---
+
+**Trampix — Projeto Integrador**
