@@ -119,7 +119,7 @@ O sistema possui 8 entidades principais:
 
 O diagrama do modelo de dados está disponível em:
 
-`docs/modelo-dados.png`
+`docs/diagrama-classes.png`
 
 ## Estrutura do repositório
 
@@ -127,9 +127,10 @@ O diagrama do modelo de dados está disponível em:
 projeto_trampix/
 ├── docs/
 │   ├── documentacao-api.md
-│   └── modelo-dados.png
+│   └── diagrama-classes.png
 ├── postman/
-│   └── projeto-integrador.postman_collection.json
+│   ├── projeto-integrador.postman_collection.json
+│   └── imagem-testes.png
 ├── trampix-api/
 │   ├── src/
 │   ├── pom.xml
@@ -493,6 +494,10 @@ A coleção contempla:
 A documentação completa, contendo os endpoints, métodos HTTP, parâmetros, exemplos e regras de acesso, está disponível em:
 
 `docs/documentacao-api.md`
+
+A documentação completa dos endpoints está disponível em:
+
+`docs/endpoints.md`
 
 ### Principais endpoints
 
